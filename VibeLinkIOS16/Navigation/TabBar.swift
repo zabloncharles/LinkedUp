@@ -37,7 +37,7 @@ struct TabBar: View {
         .animation(.spring(), value: hideTab) // Animate the offset change
         .frame(maxHeight: .infinity, alignment: .bottom)
         .padding(.horizontal,30)
-        .onChange(of: selectedTab, perform: { animate in
+        .onChange(of: selectedTab, perform: { change in
             withAnimation(.spring()) {
                 animateClick = true
                 triggerLightVibration()
