@@ -47,7 +47,7 @@ struct EventView: View {
                             VStack(alignment: .leading) {
                                 VStack {
                                     HStack {
-                                        Text("Exceeding Event Expectations.")
+                                        Text("LinkedUp Event Expectations.")
                                             .font(.title)
                                             .fontWeight(.bold)
                                             .padding(.top, 20)
@@ -234,6 +234,7 @@ struct EventView: View {
                                                         
                                                         PopularEventCard(event: item)
                                                                 .frame(width: geometry.size.width - 40, height: 200) // Set fixed width and height for the cards
+                                                              
                                                             .padding(.leading, 5)
                                                     
                                                     } // Add padding if needed
@@ -269,7 +270,7 @@ struct EventView: View {
                                                         ViewEventDetail(event: item)
                                                     } label: {
                                                         RegularEventCard(event: item)
-                                                        
+                                                           
                                                     }
                                                 }
                                             }
@@ -284,14 +285,7 @@ struct EventView: View {
                                 }.offset(y: !pageAppeared ? UIScreen.main.bounds.height  * 0.5 : 0)
                             }
                         }
-                        .onAppear {
-                           // fetchFireEvents()
-                          //  fetchAndSortByLocation()
-                            
-                           // popularEvents = sampleEvents
-                           // events = sampleEvents
-                        }
-                    }.blurredBackground()
+                    }
                         .scrollIndicators(.hidden) // Hides the scrollbar
                         
                     

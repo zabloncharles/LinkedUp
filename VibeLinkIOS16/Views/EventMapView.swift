@@ -38,7 +38,10 @@ struct EventMapView: View {
         NavigationView {
             ZStack {
                 // Map view
-                mainmap
+               
+                    mainmap
+                    .offset(y:-180)
+               
                 
                 topbar
                
@@ -70,6 +73,162 @@ struct EventMapView: View {
                         
                     
                 }
+                
+                //half modal view
+                VStack{
+                    Spacer()
+                    VStack {
+                        HStack(alignment: .center) {
+                            NavigationLink(destination: FiltersView()) {
+                                
+                                HStack {
+                                    Text("Filters")
+                                        .foregroundStyle(
+                                            LinearGradient(
+                                                gradient: Gradient(colors: [.blue, .purple]), // Define the gradient colors
+                                                startPoint: .leading, // Starting point of the gradient
+                                                endPoint: .trailing   // Ending point of the gradient
+                                            )
+                                        )
+                                    
+                                    Image(systemName:"slider.vertical.3")
+                                        .foregroundStyle(
+                                            LinearGradient(
+                                                gradient: Gradient(colors: [.blue, .purple]), // Define the gradient colors
+                                                startPoint: .leading, // Starting point of the gradient
+                                                endPoint: .trailing   // Ending point of the gradient
+                                            )
+                                        )
+                                    
+                                }.padding(.horizontal,9)
+                                    .padding(.vertical,7)
+                                    .cornerRadius(9)
+                                    .foregroundColor(Color.invert)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 9)
+                                            .stroke(Color.invert.opacity(0.30), lineWidth: 1)
+                                        
+                                    )
+                                
+                            }
+                            Rectangle()
+                                .fill(Color.invert)
+                                .frame(width: 1, height: 10)
+                            NavigationLink(destination: DateView()) {
+                                Text("Date")
+                                    .padding(.horizontal,9)
+                                    .padding(.vertical,7)
+                                    .cornerRadius(9)
+                                    .foregroundColor(Color.invert)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 9)
+                                            .stroke(Color.invert.opacity(0.30), lineWidth: 1)
+                                        
+                                    )
+                            }
+                            Rectangle()
+                                .fill(Color.invert)
+                                .frame(width: 1, height: 10)
+                            NavigationLink(destination: PriceView()) {
+                                Text("Price")
+                                    .padding(.horizontal,9)
+                                    .padding(.vertical,7)
+                                    .cornerRadius(9)
+                                    .foregroundColor(Color.invert)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 9)
+                                            .stroke(Color.invert.opacity(0.30), lineWidth: 1)
+                                        
+                                    )
+                            }
+                            Rectangle()
+                                .fill(Color.invert)
+                                .frame(width: 1, height: 10)
+                            NavigationLink(destination: CategoryView()) {
+                                Text("Category")
+                                    .padding(.horizontal,9)
+                                    .padding(.vertical,7)
+                                    .cornerRadius(9)
+                                    .foregroundColor(Color.invert)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 9)
+                                            .stroke(Color.invert.opacity(0.30), lineWidth: 1)
+                                        
+                                    )
+                            }
+                            Spacer()
+                        }.padding(.leading)
+                        
+                        //suggested results
+                        ScrollView {
+                            ForEach(user.allEvents.prefix(3)) { event in
+                                
+                                HStack(alignment: .top) {
+                                    Image(systemName: typeSymbols[event.type] ?? "")
+                                        .padding(.top,5)
+                                        .foregroundStyle(
+                                            LinearGradient(
+                                                gradient: Gradient(colors: [.blue, .purple]), // Define the gradient colors
+                                                startPoint: .leading, // Starting point of the gradient
+                                                endPoint: .trailing   // Ending point of the gradient
+                                            )
+                                        )
+                                    VStack(alignment: .leading) {
+                                        Text(event.name)
+                                            .font(.callout) // Set the font size for event titles
+                                            .bold()          // Make the event name bold
+                                            .foregroundStyle(
+                                                LinearGradient(
+                                                    gradient: Gradient(colors: [.blue, .purple]), // Define the gradient colors
+                                                    startPoint: .leading, // Starting point of the gradient
+                                                    endPoint: .trailing   // Ending point of the gradient
+                                                )
+                                            )
+                                        
+                                        Text(event.description)
+                                            .font(.callout) // Set the font size for event titles
+                                                            // Make the event name bold
+                                            .lineLimit(2)
+                                            .foregroundColor(.secondary)
+                                            .multilineTextAlignment(.leading)
+                                    } // Set primary text color (based on light/dark mode)
+                                    Spacer()
+                                }  .padding(.vertical, 7)
+                                    .padding(.horizontal, 10)
+                                // Add a background color to the event row
+                                    .cornerRadius(9)
+                                    .onTapGesture{
+                                        //
+                                        searching = false
+                                        clickedData = event
+                                        withAnimation(.spring()) {
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                                zoomToEvent(moveToEventC: event)
+                                            }
+                                        }
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                                            withAnimation(.spring()) {
+                                                clickedEvent = true
+                                            }
+                                        }
+                                        
+                                        
+                                    }
+                                    .padding(.horizontal)
+                                
+                                
+                                Divider()
+                            }
+                        }
+                        Spacer()
+                    }.frame(height:400)
+                        .padding(.top,10)
+                        .background(Color.dynamic)
+                    
+                        
+                    
+                }
+                
             }.onAppear{
                 user.fetchAllEvents()
                 if clickedEvent {
@@ -259,23 +418,22 @@ struct EventMapView: View {
                             .frame(width: 10, height: 10) // Smaller frame
                             .opacity(event.id == clickedData.id && clickedEvent  ? 1 : clickedEvent ? 0 : 1)
                     }
-                    Image(event.images[0])
-                        .resizable()
+                    Image(systemName: typeSymbols[event.type] ?? "")
                         .frame(width: 30, height: 30) // Adjust the size as needed
-                        .cornerRadius(60)
-                        .zIndex(1)
-                        .overlay(
-                            Circle()
-                                .stroke(
+                        //.background(Int(event.views) ?? 0 > 10 ? Color.red : Color.blue)
+                        .background(
+                           
                                     LinearGradient(
-                                        gradient: Gradient(colors: [Color.red,Color.blue, Color.white]), // Colors for the gradient
+                                        gradient: Gradient(colors: [Color.green, Int(event.views) ?? 0 > 10 ? Color.red : Color.blue]), // Colors for the gradient
                                         startPoint: .leading, // Starting point of the gradient
                                         endPoint: .trailing // Ending point of the gradient
-                                    ),
-                                    lineWidth: 1 // Set the width of the gradient stroke
-                                )
-                            
+                                    )
+                                    
+                                
                         )
+                        .cornerRadius(60)
+                        .zIndex(1)
+                       
                         .scaleEffect(event.id == clickedData.id ? clickedEvent  ? 1.7 : 1  : 1)
                         .animation(.spring(), value: clickedEvent)
                     

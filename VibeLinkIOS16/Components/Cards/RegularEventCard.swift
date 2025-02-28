@@ -13,7 +13,7 @@ struct RegularEventCard: View {
     var body: some View {
         VStack {
             ZStack {
-                LinearGradient(colors: [.black,.black.opacity(0.70),.black.opacity(0.60)], startPoint: .bottomLeading, endPoint: .topTrailing)
+                LinearGradient(colors: [.black,.black.opacity(0.40),.black.opacity(0.60)], startPoint: .bottomLeading, endPoint: .topTrailing)
                 
                 ZStack {
                     
@@ -103,7 +103,13 @@ struct RegularEventCard: View {
                 Image(event.images[0]) // Replace with actual background image
                 .resizable()
                 .scaledToFill())
+            
+            .overlay(
+                RoundedRectangle(cornerRadius: 20)
+                    .stroke(Color.invert.opacity(0.20), lineWidth: 1)
+            )
             .cornerRadius(20)
+            
             
         }//.frame(height:300)
         

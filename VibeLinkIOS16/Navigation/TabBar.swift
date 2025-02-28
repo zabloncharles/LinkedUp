@@ -20,23 +20,24 @@ struct TabBar: View {
         }
         .padding(.horizontal, 8)
         .padding(.top, 14)
+       
         .frame(height: 78, alignment: .top)
         
-        .background(Color.dynamic.opacity(0.60))
+        .background(Color.dynamic.opacity(0.90))
         .background(.ultraThinMaterial)
-        
-       
-        .cornerRadius(60)
-        .overlay(
-            RoundedRectangle(cornerRadius: 60)
-                .stroke(Color.invert.opacity(0.09), lineWidth: 1)
-        )
-        .scaleEffect(animateClick ? 0.97 : 1)
         .padding(.bottom,20)
+       
+        .cornerRadius(0)
+        .overlay(
+            RoundedRectangle(cornerRadius: 0)
+                .stroke(Color.invert.opacity(0.00), lineWidth: 1)
+        )
+       // .scaleEffect(animateClick ? 0.97 : 1)
+        
         .offset(y: hideTab ? 200 : 0) // Move the tab downwards when hideTab is true
         .animation(.spring(), value: hideTab) // Animate the offset change
         .frame(maxHeight: .infinity, alignment: .bottom)
-        .padding(.horizontal,30)
+        
         .onChange(of: selectedTab, perform: { change in
             withAnimation(.spring()) {
                 animateClick = true
